@@ -8,6 +8,8 @@ router = APIRouter(
     tags=['Shortly Link']
 )
 
+domain = 'http://127.0.0.1:8000'
+
 
 def generate_short_url(url: str):
     hashids = Hashids(salt=url, min_length=7)
@@ -22,10 +24,10 @@ def get_long_url(short_url: str):
 @router.post("/shorten")
 async def shorten(url: UrlItem):
     token = generate_short_url(url.long_url)
-    short_url = f'https://test.com/{token}'
+    short_url = f'{domain}/{token}'
     return {"short_url": short_url, 'long_url': url.long_url, 'token': token}
 
-@router.get("/")
+@router.get("/{short_url}")
 async def redirect_to_original_url(short_url: str):
     long_url = get_long_url(short_url)
     if long_url is None:
