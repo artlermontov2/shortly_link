@@ -2,6 +2,7 @@ from fastapi import APIRouter, Response, HTTPException, status
 from fastapi.responses import RedirectResponse
 from hashids import Hashids
 from app.reduction.schemas import UrlItem
+from app.reduction.dao import ReductionDAO
 
 
 router = APIRouter(
@@ -16,11 +17,6 @@ def generate_short_url(url: str):
     token = hashids.encrypt(123)
     return token
 
-# Достаём из БД длинный url
-def get_long_url(short_url: str):
-    long_url = 'https://habr.com/ru/companies/spectr/articles/715290/'
-    return long_url
-
 @router.post("/shorten")
 async def shorten(url: UrlItem):
     token = generate_short_url(url.long_url)
@@ -28,8 +24,9 @@ async def shorten(url: UrlItem):
     return {"short_url": short_url, 'long_url': url.long_url, 'token': token}
 
 @router.get("/{short_url}")
-async def redirect_to_original_url(short_url: str):
-    long_url = get_long_url(short_url)
+async def redirect_to_original_url(token: str, user_id: int = 1):
+    long_url = await ReductionDAO.find_original_url(token=token, user_id=user_id)
+
     if long_url is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
