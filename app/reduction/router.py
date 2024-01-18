@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from fastapi import APIRouter, Response, HTTPException, status
 from fastapi.responses import RedirectResponse
 from hashids import Hashids
@@ -21,11 +22,18 @@ def generate_short_url(url: str):
 async def shorten(url: UrlItem):
     token = generate_short_url(url.long_url)
     short_url = f'{domain}/{token}'
-    return {"short_url": short_url, 'long_url': url.long_url, 'token': token}
+    await ReductionDAO.add(
+        long_url=url.long_url,
+        user_id=1,
+        token=token,
+        creared_at=datetime.now(),
+        expiry_at=datetime.now() + timedelta(weeks=52)
+    )
+    return {"msg": "A short link has been created", "short_url": short_url}
 
 @router.get("/{short_url}")
-async def redirect_to_original_url(token: str, user_id: int = 1):
-    long_url = await ReductionDAO.find_original_url(token=token, user_id=user_id)
+async def redirect_to_original_url(short_url: str, user_id: int = 1):
+    long_url = await ReductionDAO.find_original_url(token=short_url, user_id=user_id)
 
     if long_url is None:
         raise HTTPException(
