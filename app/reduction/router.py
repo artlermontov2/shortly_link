@@ -13,14 +13,18 @@ router = APIRouter(
 domain = 'http://127.0.0.1:8000'
 
 
-def generate_short_url(url: str):
+def generate_token(url: str):
     hashids = Hashids(salt=url, min_length=7)
     token = hashids.encrypt(123)
     return token
 
 @router.post("/shorten")
 async def shorten(url: UrlItem):
-    token = generate_short_url(url.long_url)
+    exists_token = await ReductionDAO.find_token(long_url=url.long_url, user_id=1)
+    if exists_token:
+        short_url = f'{domain}/{exists_token}'
+        return {"msg": "The link for this address already exists", "short_url": short_url}
+    token = generate_token(url.long_url)
     short_url = f'{domain}/{token}'
     await ReductionDAO.add(
         long_url=url.long_url,
@@ -32,8 +36,8 @@ async def shorten(url: UrlItem):
     return {"msg": "A short link has been created", "short_url": short_url}
 
 @router.get("/{short_url}")
-async def redirect_to_original_url(short_url: str, user_id: int = 1):
-    long_url = await ReductionDAO.find_original_url(token=short_url, user_id=user_id)
+async def redirect_to_original_url(short_url: str):
+    long_url = await ReductionDAO.find_original_url(token=short_url, user_id=1)
 
     if long_url is None:
         raise HTTPException(
