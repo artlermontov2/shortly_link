@@ -7,7 +7,7 @@ from app.reduction.dao import ReductionDAO
 
 
 router = APIRouter(
-    tags=['Shortly Link']
+    tags=["Shortly Link"]
 )
 
 domain = 'http://127.0.0.1:8000'
