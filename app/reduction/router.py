@@ -31,7 +31,7 @@ async def shorten(url: UrlItem):
         user_id=1,
         token=token,
         creared_at=datetime.now(),
-        expiry_at=datetime.now() + timedelta(weeks=52)
+        expiry_at=datetime.now() + timedelta(days=1)
     )
     return {"msg": "A short link has been created", "short_url": short_url}
 

@@ -1,5 +1,5 @@
-from datetime import date
-from sqlalchemy import insert, select, and_
+from datetime import date, datetime
+from sqlalchemy import insert, select, and_, event, delete
 from app.database import async_session_maker
 from app.reduction.models import ShortenModel
 
@@ -51,4 +51,14 @@ class ReductionDAO:
             )
             result = await session.execute(query)
             return result.scalar()
+        
+    @event.listens_for(ShortenModel, 'after_insert')
+    async def delete_after_expire():
+            async with async_session_maker() as session:
+                query = delete(ShortenModel).where(
+                    ShortenModel.expiry_at <= datetime.now()
+                )
+                await session.execute(query)
+        
+
         
