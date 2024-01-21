@@ -9,5 +9,5 @@ class ShortenModel(Base):
     user_id = Column(ForeignKey("user_table.id"))
     token = Column(String, nullable=False)
     long_url = Column(String, nullable=False)
-    creared_at = Column(Date, nullable=False)
+    created_at = Column(Date, nullable=False)
     expiry_at = Column(Date, nullable=False)

@@ -24,7 +24,7 @@ class ReductionDAO:
             cls, long_url: str,
             user_id: int,
             token: str,
-            creared_at: date,
+            created_at: date,
             expiry_at: date
     ):
         async with async_session_maker() as session:
@@ -32,7 +32,7 @@ class ReductionDAO:
                 long_url = long_url,
                 user_id = user_id,
                 token = token,
-                creared_at = creared_at,
+                created_at = created_at,
                 expiry_at = expiry_at
             ).returning(ShortenModel)
 

@@ -8,4 +8,4 @@ class UsersModel(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     password = Column(String, nullable=False)
     email = Column(String, nullable=False)
-    creared_at = Column(Date, nullable=False)
+    created_at = Column(Date, nullable=False)
