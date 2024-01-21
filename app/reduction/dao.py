@@ -52,6 +52,15 @@ class ReductionDAO:
             result = await session.execute(query)
             return result.scalar()
         
+    # @classmethod
+    # async def delete_after_expire(cls):
+    #     async with async_session_maker() as session:
+    #         query = delete(cls.model).where(
+    #             cls.model.expiry_at <= datetime.now()
+    #         )
+    #         await session.execute(query)
+    #         await session.commit()
+        
     @event.listens_for(ShortenModel, 'after_insert')
     async def delete_after_expire():
             async with async_session_maker() as session:
@@ -59,6 +68,7 @@ class ReductionDAO:
                     ShortenModel.expiry_at <= datetime.now()
                 )
                 await session.execute(query)
+                await session.commit()
         
 
         

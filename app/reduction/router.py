@@ -24,6 +24,8 @@ async def shorten(url: UrlItem):
     if exists_token:
         short_url = f'{domain}/{exists_token}'
         return {"msg": "The link for this address already exists", "short_url": short_url}
+    
+    # await ReductionDAO.delete_after_expire()
     token = generate_token(url.long_url)
     short_url = f'{domain}/{token}'
     await ReductionDAO.add(
