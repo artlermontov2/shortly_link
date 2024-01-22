@@ -20,6 +20,7 @@ async def register_user(user: SUser):
             status_code=status.HTTP_409_CONFLICT,
             detail="Пользователь уже существует"
         )
+    
     hashed_password = get_password_hash(password=user.password)
     await UserDAO.add_new_user(
         password=hashed_password,
