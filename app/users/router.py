@@ -1,8 +1,10 @@
 from datetime import datetime, timedelta
 from fastapi import APIRouter, Response, HTTPException, status
+from pydantic import EmailStr
 from app.users.schemas import SUser
 from app.users.auth import get_password_hash
 from app.users.dao import UserDAO
+from app.users.auth import authenticate_user
 
 
 
@@ -28,3 +30,7 @@ async def register_user(user: SUser):
         created_at=datetime.now()
     )
     return {"msg": "Пользователь зарегистрирован!"}
+
+# @router.get("/find_user/")
+# async def find_user(email: EmailStr, password: str):
+#     return await authenticate_user(email=email, password=password)

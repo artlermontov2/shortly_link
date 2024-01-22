@@ -38,3 +38,12 @@ class UserDAO:
             )
             result = await session.execute(query)
             return result.scalar_one_or_none()
+        
+    @classmethod 
+    async def find_by_id(cls, id: int):
+        async with async_session_maker() as session:
+            query = select(cls.model).where(
+                cls.model.id == id
+            )
+            result = await session.execute(query)
+            return result.scalar_one_or_none()
