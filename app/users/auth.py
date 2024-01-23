@@ -2,7 +2,7 @@ from jose import jwt
 import os
 from passlib.context import CryptContext
 from pydantic import EmailStr
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 from app.users.dao import UserDAO
 
@@ -18,7 +18,7 @@ def verify_password(plain_password, hashes_password) -> bool:
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=60)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=30)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(
         to_encode, os.getenv("SECRET_KEY"), os.getenv("ALGORITHM")
