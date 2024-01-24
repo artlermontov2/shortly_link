@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from fastapi import Depends, Request
 from dotenv import load_dotenv
 from jose import jwt, JWTError
@@ -15,7 +15,6 @@ load_dotenv()
 # получаем токен cookie
 def get_token(request: Request):
     token = request.cookies.get("web-app-session-id")
-    print(token)
 
     if not token:
         raise TokenAbsentExeption
@@ -31,7 +30,7 @@ async def get_current_user(token: str = Depends(get_token)):
         raise IncorrectTokenFormatExeption
     
     expire: str = payload.get("exp")
-    if (not expire) or (int(expire) < datetime.utcnow().timestamp()):
+    if (not expire) or (int(expire) < datetime.now(timezone.utc).timestamp()):
         raise TokenExpiredExeption
     
     user_id: str = payload.get("sub")

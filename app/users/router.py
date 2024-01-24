@@ -6,9 +6,6 @@ from app.users.dao import UserDAO
 from app.users.schemas import SUser
 from app.users.auth import authenticate_user, create_access_token
 from app.exeptions import UserAlredyExistsException, IncorrectEmailOrPasswordException
-from app.users.dependencies import get_current_user
-from app.users.models import UsersModel
-
 
 
 router = APIRouter(
@@ -38,18 +35,13 @@ async def login(responce: Response, user_data: SUser):
         raise IncorrectEmailOrPasswordException
     access_token = create_access_token({"sub": str(user.id)})
     responce.set_cookie("web-app-session-id", access_token, httponly=True)
-    print(access_token)
-    return {"msg": f"Привет, {user.email}!"}
+    return {"msg": "Добро пожаловать!"}
 
 @router.post("/logout")
 async def logout(responce: Response):
     responce.delete_cookie("web-app-session-id")
     return {"msg": "Вы вышли из системы"}
 
-@router.get("/me")
-async def get_user_me(current_user: UsersModel = Depends(get_current_user)):
-    return current_user
-
 # @router.get("/find_user/")
 # async def find_user(email: EmailStr, password: str):
-#     return await authenticate_user(email=email, password=password)
+#     return await authenticate_user(email=email, password=password

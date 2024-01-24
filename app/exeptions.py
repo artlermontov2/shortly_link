@@ -35,3 +35,8 @@ UserIsNotPresentExeption = HTTPException(
     detail="Пользователя не существует",
     headers={"WWW-Authenticate": "Bearer"}
 )
+
+OriginalUrlNotFound = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Динный url не найден",
+)

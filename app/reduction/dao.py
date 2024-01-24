@@ -41,13 +41,22 @@ class ReductionDAO:
             return result.scalar()
         
     @classmethod
-    async def find_token(cls, long_url: str, user_id: int):
+    async def find_users_token(cls, long_url: str, user_id: int):
         async with async_session_maker() as session:
             query = select(cls.model.token).where(
                 and_(
                     cls.model.long_url == long_url,
                     cls.model.user_id == user_id
                 )
+            )
+            result = await session.execute(query)
+            return result.scalar()
+        
+    @classmethod
+    async def find_token(cls, long_url: str):
+        async with async_session_maker() as session:
+            query = select(cls.model.token).where(
+                cls.model.long_url == long_url
             )
             result = await session.execute(query)
             return result.scalar()

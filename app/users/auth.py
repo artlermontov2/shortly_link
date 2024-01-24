@@ -9,6 +9,7 @@ from app.users.dao import UserDAO
 load_dotenv()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+EXPIRE_MIN = 30
 
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
@@ -18,7 +19,7 @@ def verify_password(plain_password, hashes_password) -> bool:
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(minutes=30)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=EXPIRE_MIN)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(
         to_encode, os.getenv("SECRET_KEY"), os.getenv("ALGORITHM")
