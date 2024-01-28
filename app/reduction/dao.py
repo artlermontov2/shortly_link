@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from sqlalchemy import insert, select, and_, event, delete
+from sqlalchemy import insert, select, and_, delete
 from app.database import async_session_maker
 from app.reduction.models import ShortenModel
 
@@ -51,6 +51,15 @@ class ReductionDAO:
             )
             result = await session.execute(query)
             return result.scalar()
+        
+    @classmethod
+    async def find_all_user_url(cls, user_id: int):
+        async with async_session_maker() as session:
+            query = select(cls.model.__table__.columns).where(
+                cls.model.user_id == user_id
+            )
+            result = await session.execute(query)
+            return result.mappings().all()
         
     @classmethod
     async def find_token(cls, long_url: str):

@@ -37,6 +37,6 @@ UserIsNotPresentExeption = HTTPException(
 )
 
 OriginalUrlNotFound = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
+    status_code=status.HTTP_404_NOT_FOUND,
     detail="Динный url не найден",
 )

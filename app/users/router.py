@@ -4,9 +4,11 @@ from app.users.schemas import SUser
 from app.users.auth import get_password_hash
 from app.users.dao import UserDAO
 from app.users.schemas import SUser
+from app.users.models import UsersModel
 from app.users.auth import authenticate_user, create_access_token
+from app.users.dependencies import get_current_user
 from app.exeptions import UserAlredyExistsException, IncorrectEmailOrPasswordException
-
+from app.reduction.dao import ReductionDAO
 
 router = APIRouter(
     prefix="/auth",
@@ -42,6 +44,7 @@ async def logout(responce: Response):
     responce.delete_cookie("web-app-session-id")
     return {"msg": "Вы вышли из системы"}
 
-# @router.get("/find_user/")
-# async def find_user(email: EmailStr, password: str):
-#     return await authenticate_user(email=email, password=password
+@router.get("/my_all")
+async def get_my_all_urls(user: UsersModel = Depends(get_current_user)):
+    result = await ReductionDAO.find_all_user_url(user_id=user.id)
+    return result

@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from fastapi import APIRouter, Response, Depends
+from fastapi import APIRouter, Depends
 from fastapi.responses import RedirectResponse
 from hashids import Hashids
 from app.reduction.schemas import UrlItem
@@ -14,7 +14,7 @@ router = APIRouter(
 )
 
 domain = 'http://127.0.0.1:8000'
-expire_days = 1
+expire_days = 30
 
 
 def generate_token(url: str):
@@ -26,7 +26,7 @@ def generate_token(url: str):
 async def shorten(
     url: UrlItem, user: UsersModel = Depends(get_current_user)
 ):
-    exists_token = await ReductionDAO.find_token(long_url=url.long_url)
+    exists_token = await ReductionDAO.find_users_token(long_url=url.long_url, user_id=user.id)
     if exists_token:
         short_url = f'{domain}/{exists_token}'
         return {
