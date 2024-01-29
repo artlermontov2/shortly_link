@@ -9,6 +9,7 @@ from app.users.auth import authenticate_user, create_access_token
 from app.users.dependencies import get_current_user
 from app.exeptions import UserAlredyExistsException, IncorrectEmailOrPasswordException
 from app.reduction.dao import ReductionDAO
+from app.reduction.router import domain
 
 router = APIRouter(
     prefix="/auth",
@@ -47,4 +48,12 @@ async def logout(responce: Response):
 @router.get("/my_all")
 async def get_my_all_urls(user: UsersModel = Depends(get_current_user)):
     result = await ReductionDAO.find_all_user_url(user_id=user.id)
-    return result
+    users_url = []
+    for i in result:
+        users_url.append(
+            {
+                "short_url": f'{domain}/{i.token}',
+                "long_url": i.long_url
+            }
+        )
+    return users_url

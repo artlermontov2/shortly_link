@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from sqlalchemy import insert, select, and_, delete
+from sqlalchemy.orm import load_only
 from app.database import async_session_maker
 from app.reduction.models import ShortenModel
 
@@ -55,11 +56,12 @@ class ReductionDAO:
     @classmethod
     async def find_all_user_url(cls, user_id: int):
         async with async_session_maker() as session:
-            query = select(cls.model.__table__.columns).where(
+            query = select(cls.model).filter(
                 cls.model.user_id == user_id
             )
+            query = query.options(load_only(cls.model.token, cls.model.long_url))
             result = await session.execute(query)
-            return result.mappings().all()
+            return result.scalars().all()
         
     @classmethod
     async def find_token(cls, long_url: str):
@@ -78,15 +80,7 @@ class ReductionDAO:
             )
             await session.execute(query)
             await session.commit()
-        
-    # @event.listens_for(ShortenModel, 'after_insert')
-    # async def delete_after_expire():
-    #         async with async_session_maker() as session:
-    #             query = delete(ShortenModel).where(
-    #                 ShortenModel.expiry_at <= datetime.now()
-    #             )
-    #             await session.execute(query)
-    #             await session.commit()
+
         
 
         
