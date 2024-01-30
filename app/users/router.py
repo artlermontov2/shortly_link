@@ -11,6 +11,7 @@ from app.exeptions import UserAlredyExistsException, IncorrectEmailOrPasswordExc
 from app.reduction.dao import ReductionDAO
 from app.reduction.router import domain
 
+
 router = APIRouter(
     prefix="/auth",
     tags=["Auth & Пользователи"]
