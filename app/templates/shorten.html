@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="text-align: center; position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%);">
+    <h1>Сократить ссылку</h1>
+    <form class="row g-3">
+        <div class="col-auto">
+          <input type="url" class="form-control" id="inputPassword2" placeholder="Длинную ссылку сюда">
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary mb-3">Сократить</button>
+        </div>
+    </form>
+</div>
+{% endblock  %}

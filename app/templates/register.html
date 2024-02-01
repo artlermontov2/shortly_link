@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div style="text-align: center; position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%);">
+    <div class="d-flex justify-content-start">
+        <form>
+              <label class="d-flex justify-content-start" for="exampleInputEmail1" class="form-label">Введите почту</label>
+              <input type="email" class="form-control" placeholder="почта" id="exampleInputEmail1" aria-describedby="emailHelp">
+
+              <label  class="d-flex justify-content-start" for="exampleInputPassword1" class="form-label">Введите пароль</label>
+              <input type="password" class="form-control" placeholder="пароль" id="exampleInputPassword1">
+              <br>
+              <button type="submit" class="btn btn-primary d-flex justify-content-start">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
