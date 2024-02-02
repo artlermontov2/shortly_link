@@ -1,17 +1,54 @@
 {% extends "base.html" %}
 
 {% block head %}
+<script>
+  async function shortenLink() {
+    const longUrlInput = document.getElementById("long_url");
+    const shortLinkDiv = document.getElementById("short_link");
+    const wrongCredentialsSpan = document.getElementById("wrong_credentials");
+
+    // Очистите предыдущие сообщения об ошибках и результаты
+    wrongCredentialsSpan.textContent = "";
+    shortLinkDiv.textContent = "";
+
+    const url = "http://127.0.0.1:8000/shorten";
+    const long_url = longUrlInput.value;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'}, 
+        body: JSON.stringify({long_url: long_url}),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        // Предполагается, что API возвращает объект с полем "short_url"
+        shortLinkDiv.innerHTML = `Короткая ссылка: <a href="${data.short_url}" target="_blank">${data.short_url}</a>
+        <button onclick="copyToClipboard('${data.short_url}')" type="button" class="btn btn-primary mb-3">Копировать</button>`;
+      } else {
+        // Предполагается, что API возвращает сообщение об ошибке в поле "msg"
+        wrongCredentialsSpan.textContent = data.msg || "При сокращении ссылки возникла ошибка.";
+      }
+    } catch (error) {
+      wrongCredentialsSpan.textContent = "Ошибка соединения с сервером.";
+    }
+  }
+</script>
 {% endblock  %}
 {% block content %}
 <div style="text-align: center; position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%);">
-    <h1>Сократить ссылку</h1>
-    <div class="row g-3">
-        <div class="col-auto">
-          <input type="url" class="form-control" id="inputPassword2" placeholder="Длинную ссылку сюда">
-        </div>
-        <div class="col-auto">
-          <button type="submit" class="btn btn-primary mb-3">Сократить</button>
-        </div>
-    </div>
+  <h1>Сократить ссылку</h1>
+  <div class="row g-3">
+      <div class="col-auto">
+        <input type="url" class="form-control" id="long_url" name="long_url" placeholder="Длинную ссылку сюда" required>
+      </div>
+      <div class="col-auto">
+        <button onclick="shortenLink()" type="button" class="btn btn-primary mb-3">Сократить</button>
+      </div>
+  </div>
+  <div id="wrong_credentials" style="color: red;"></div>
+  <div id="short_link"></div>
 </div>
 {% endblock  %}
