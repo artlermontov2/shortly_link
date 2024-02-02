@@ -1,19 +1,43 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block head %}
+<script>
+    async function loginUser() {
+        const wrongCredentialsSpan = document.getElementById("wrong_credentials");
+        wrongCredentialsSpan.textContent = "";
 
+        const url = "http://127.0.0.1:8000/auth/login";
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        await fetch(url, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify({email: email, password: password}),
+        }).then(response => {
+            if (response.status === 200) {
+                window.location.href = "/pages/shorten_url"
+            } else {
+                wrongCredentialsSpan.textContent = "Неверный email или пароль";
+            }
+        });
+    }
+</script>
+{% endblock %}
+
+{% block content %}
 <div style="text-align: center; position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%);">
     <div class="d-flex justify-content-start">
-        <form>
-              <label class="d-flex justify-content-start" for="exampleInputEmail1" class="form-label">Введите почту</label>
-              <input type="email" class="form-control" placeholder="почта" id="exampleInputEmail1" aria-describedby="emailHelp">
+        <div>
+              <label class="d-flex justify-content-start" for="email" class="form-label">Введите почту</label>
+              <input type="email" class="form-control" placeholder="почта" id="email" name="email">
 
-              <label  class="d-flex justify-content-start" for="exampleInputPassword1" class="form-label">Введите пароль</label>
-              <input type="password" class="form-control" placeholder="пароль" id="exampleInputPassword1">
+              <label  class="d-flex justify-content-start" for="password" class="form-label">Введите пароль</label>
+              <input type="password" class="form-control" placeholder="пароль" id="password" name="password">
+              <span id="wrong_credentials" class="text-sm text-red-400"></span>
               <br>
-              <button type="submit" class="btn btn-primary d-flex justify-content-start">Вход</button>
-        </form>
+              <button onclick="loginUser()" class="btn btn-primary d-flex justify-content-start">Вход</button>
+        </div>
     </div>
 </div>
-
 {% endblock %}

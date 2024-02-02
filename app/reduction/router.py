@@ -16,7 +16,6 @@ router = APIRouter(
 domain = 'http://127.0.0.1:8000'
 expire_days = 30
 
-
 def generate_token(url: str):
     hashids = Hashids(salt=url, min_length=7)
     token = hashids.encrypt(123)

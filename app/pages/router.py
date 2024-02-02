@@ -18,7 +18,7 @@ async def login(request: Request):
         context={"request": request}
     )
 
-@router.get("/short")
+@router.get("/shorten_url")
 async def login(request: Request):
     return templates.TemplateResponse(
         name="shorten.html",
