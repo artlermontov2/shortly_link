@@ -1,5 +1,5 @@
 from datetime import datetime
-from fastapi import APIRouter, Response, Depends
+from fastapi import APIRouter, Response, Depends, status
 from app.users.schemas import SUser
 from app.users.auth import get_password_hash
 from app.users.dao import UserDAO
@@ -18,7 +18,7 @@ router = APIRouter(
 )
 
 
-@router.post("/register")
+@router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register_user(user: SUser):
     existing_user = await UserDAO.find_user(email=user.email)
     if existing_user:
