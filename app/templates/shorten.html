@@ -2,39 +2,39 @@
 
 {% block head %}
 <script>
-  async function shortenLink() {
-    const longUrlInput = document.getElementById("long_url");
-    const shortLinkDiv = document.getElementById("short_link");
-    const wrongCredentialsSpan = document.getElementById("wrong_credentials");
+    async function shortenLink() {
+        const longUrlInput = document.getElementById("long_url");
+        const shortLinkDiv = document.getElementById("short_link");
+        const wrongCredentialsSpan = document.getElementById("wrong_credentials");
 
-    // Очистите предыдущие сообщения об ошибках и результаты
-    wrongCredentialsSpan.textContent = "";
-    shortLinkDiv.textContent = "";
+        // Очистите предыдущие сообщения об ошибках и результаты
+        wrongCredentialsSpan.textContent = "";
+        shortLinkDiv.textContent = "";
 
-    const url = "http://127.0.0.1:8000/shorten";
-    const long_url = longUrlInput.value;
+        const url = "http://127.0.0.1:8000/shorten";
+        const long_url = longUrlInput.value;
 
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'}, 
-        body: JSON.stringify({long_url: long_url}),
-      });
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify({long_url: long_url}),
+          });
 
-      const data = await response.json();
+          const data = await response.json();
 
-      if (response.status === 200) {
-        // Предполагается, что API возвращает объект с полем "short_url"
-        shortLinkDiv.innerHTML = `Короткая ссылка: <a href="${data.short_url}" target="_blank">${data.short_url}</a>
-        <button onclick="copyToClipboard('${data.short_url}')" type="button" class="btn btn-primary mb-3">Копировать</button>`;
-      } else {
-        // Предполагается, что API возвращает сообщение об ошибке в поле "msg"
-        wrongCredentialsSpan.textContent = data.msg || "При сокращении ссылки возникла ошибка.";
-      }
-    } catch (error) {
-      wrongCredentialsSpan.textContent = "Ошибка соединения с сервером.";
+          if (response.status === 200) {
+            // Предполагается, что API возвращает объект с полем "short_url"
+            shortLinkDiv.innerHTML = `Короткая ссылка: <a href="${data.short_url}" target="_blank">${data.short_url}</a>
+            <button onclick="copyToClipboard('${data.short_url}')" type="button" class="btn btn-primary mb-3">Копировать</button>`;
+          } else {
+            // Предполагается, что API возвращает сообщение об ошибке в поле "msg"
+            wrongCredentialsSpan.textContent = data.msg || "При сокращении ссылки возникла ошибка.";
+          }
+        } catch (error) {
+          wrongCredentialsSpan.textContent = "Ошибка соединения с сервером.";
+        }
     }
-  }
 </script>
 {% endblock  %}
 {% block content %}

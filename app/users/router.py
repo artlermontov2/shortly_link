@@ -33,17 +33,17 @@ async def register_user(user: SUser):
     return {"msg": "Пользователь зарегистрирован!"}
 
 @router.post("/login")
-async def login(responce: Response, user_data: SUser):
+async def login(response: Response, user_data: SUser):
     user = await authenticate_user(email=user_data.email, password=user_data.password)
     if not user:
         raise IncorrectEmailOrPasswordException
     access_token = create_access_token({"sub": str(user.id)})
-    responce.set_cookie("web-app-session-id", access_token, httponly=True)
+    response.set_cookie("web-app-session-id", access_token, httponly=True)
     return {"msg": "Добро пожаловать!"}
 
 @router.post("/logout")
-async def logout(responce: Response):
-    responce.delete_cookie("web-app-session-id")
+async def logout(response: Response):
+    response.delete_cookie("web-app-session-id")
     return {"msg": "Вы вышли из системы"}
 
 @router.get("/my_all")
