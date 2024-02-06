@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex flex-col items-center">
+    <div class="link-item text-center">
+        <div><strong>Мои ссылки</strong></div>
+    </div>
+    <ul class="list-none text-left">
+        {% for link in user_links %}
+        <li class="text-2xl font-bold mb-5">
+            <div class="link-item">
+                <div class="short-url">Короткая: {{ link.short_url }}</div>
+                <div class="long-url">Полная: {{ link.long_url }}</div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+<style>
+    .link-item {
+        background-color: #f4f4f4;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    .short-url {
+        color: #ff5733;
+    }
+    .long-url {
+        color: #3366ff;
+        margin-top: 5px;
+    }
+</style>
+{% endblock  %}
