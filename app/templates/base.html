@@ -24,17 +24,22 @@
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Navbar</a>
+          {% if user %}
+          <a class="navbar-brand">{{ user.email }}</a>
+          {% endif %}
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-              <a class="nav-link active" aria-current="page" href="/pages/index">Вход</a>
-              <a class="nav-link" href="/pages/user_register">Регистрация</a>
+              {% if user %}
               <a class="nav-link" href="/pages/user_link">Мои ссылки</a>
               <a class="nav-link" href="/pages/shorten_url">Сократить</a>
               <a onclick="logoutUser()" class="nav-link" href="#">Выход</a>
+              {% else %}
+              <a class="nav-link active" aria-current="page" href="/pages/index">Вход</a>
+              <a class="nav-link" href="/pages/user_register">Регистрация</a>
+              {% endif %}
             </div>
           </div>
         </div>
