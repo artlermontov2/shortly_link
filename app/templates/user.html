@@ -1,5 +1,26 @@
 {% extends "base.html" %}
 
+{% block head %}
+<script>
+    async function deleteLink(id) {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/delete/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                wrongCredentialsSpan.textContent = "Выполните вход или зарегистируйтесь."
+            }
+        } catch(error) {
+            wrongCredentialsSpan.textContent = "Ошибка соединения с сервером.";
+        }
+    }
+</script>
+{% endblock %}
 {% block content %}
 <div class="flex flex-col items-center">
     <div class="link-item text-center">
@@ -11,6 +32,7 @@
             <div class="link-item">
                 <div class="short-url">Короткая: {{ link.short_url }}</div>
                 <div class="long-url">Полная: {{ link.long_url }}</div>
+                <a class="short-url" href="#" onclick="deleteLink({{ link.id }})">Удалить</a>
             </div>
         </li>
         {% endfor %}

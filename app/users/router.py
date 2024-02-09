@@ -30,7 +30,6 @@ async def register_user(user: SUser):
         email=user.email,
         created_at=datetime.now()
     )
-    return {"msg": "Пользователь зарегистрирован!"}
 
 @router.post("/login")
 async def login(response: Response, user_data: SUser):
@@ -39,12 +38,10 @@ async def login(response: Response, user_data: SUser):
         raise IncorrectEmailOrPasswordException
     access_token = create_access_token({"sub": str(user.id)})
     response.set_cookie("web-app-session-id", access_token, httponly=True)
-    return {"msg": "Добро пожаловать!"}
 
 @router.post("/logout")
 async def logout(response: Response):
     response.delete_cookie("web-app-session-id")
-    return {"msg": "Вы вышли из системы"}
 
 @router.get("/my_all")
 async def get_my_all_urls(user: UsersModel = Depends(get_current_user)):
@@ -54,7 +51,8 @@ async def get_my_all_urls(user: UsersModel = Depends(get_current_user)):
         users_url.append(
             {
                 "short_url": f'{domain}/{i.token}',
-                "long_url": i.long_url
+                "long_url": i.long_url,
+                "id": i.id
             }
         )
     return users_url

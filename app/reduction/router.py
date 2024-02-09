@@ -51,3 +51,7 @@ async def redirect_to_original_url(short_url: str):
     if long_url is None:
         raise OriginalUrlNotFound
     return RedirectResponse(url=long_url)
+
+@router.delete("/delete/{id}")
+async def delete_record(id: int, user: UsersModel = Depends(get_current_user)):
+    await ReductionDAO.delete(id=id, user_id=user.id)

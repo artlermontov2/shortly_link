@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from sqlalchemy import insert, select, and_, delete
+from sqlalchemy import desc, insert, select, and_, delete
 from sqlalchemy.orm import load_only
 from app.database import async_session_maker
 from app.reduction.models import ShortenModel
@@ -58,7 +58,7 @@ class ReductionDAO:
         async with async_session_maker() as session:
             query = select(cls.model).filter(
                 cls.model.user_id == user_id
-            )
+            ).order_by(desc(cls.model.created_at))
             query = query.options(load_only(cls.model.token, cls.model.long_url))
             result = await session.execute(query)
             return result.scalars().all()
@@ -78,6 +78,13 @@ class ReductionDAO:
             query = delete(cls.model).where(
                 cls.model.expiry_at <= datetime.now()
             )
+            await session.execute(query)
+            await session.commit()
+
+    @classmethod
+    async def delete(cls, **filter_by):
+        async with async_session_maker() as session:
+            query = delete(cls.model).filter_by(**filter_by)
             await session.execute(query)
             await session.commit()
 
