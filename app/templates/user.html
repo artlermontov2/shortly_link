@@ -21,6 +21,7 @@
     }
 </script>
 {% endblock %}
+
 {% block content %}
 <div class="flex flex-col items-center">
     <div class="link-item text-center">
@@ -32,7 +33,7 @@
             <div class="link-item">
                 <div class="short-url">Короткая: {{ link.short_url }}</div>
                 <div class="long-url">Полная: {{ link.long_url }}</div>
-                <a class="short-url" href="#" onclick="deleteLink({{ link.id }})">Удалить</a>
+                <a class="delete-url" href="#" onclick="deleteLink({{ link.id }})">Удалить</a>
             </div>
         </li>
         {% endfor %}
@@ -45,10 +46,14 @@
         margin-bottom: 10px;
     }
     .short-url {
-        color: #ff5733;
+        color: #FF5733 ;
     }
     .long-url {
-        color: #3366ff;
+        color: #900C3F;
+        margin-top: 5px;
+    }
+    .delete-url {
+        color: #581845;
         margin-top: 5px;
     }
 </style>
