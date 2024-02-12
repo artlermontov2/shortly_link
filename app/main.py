@@ -13,7 +13,6 @@ app.include_router(pages_router)
 
 # Подключение CORS, чтобы запросы к API могли приходить из браузера 
 origins = [
-    # 3000 - порт, на котором работает фронтенд на React.js 
     "http://localhost:3000", "http://127.0.0.1:8000"
 ]
 
