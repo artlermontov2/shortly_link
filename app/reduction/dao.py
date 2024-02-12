@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from sqlalchemy import desc, insert, select, and_, delete
+from sqlalchemy import desc, insert, select, and_, delete, func
 from sqlalchemy.orm import load_only
 from app.database import async_session_maker
 from app.reduction.models import ShortenModel
@@ -63,6 +63,29 @@ class ReductionDAO:
             result = await session.execute(query)
             return result.scalars().all()
         
+    @classmethod
+    async def find_all_user_url_pagination(
+        cls, user_id: int, size: int, page: int
+    ):
+        offset = (page - 1) * size
+        async with async_session_maker() as session:
+            query = select(cls.model).filter(
+                cls.model.user_id == user_id
+            ).order_by(desc(cls.model.created_at))
+            
+            query = query.options(
+                load_only(cls.model.token, cls.model.long_url)
+            ).limit(size).offset(offset)
+            result = await session.execute(query)
+            return result.scalars().all()
+        
+    @classmethod
+    async def count_user_urls(cls, **filter_by):
+        async with async_session_maker() as session:
+            query = select(func.count()).select_from(cls.model).filter_by(**filter_by)
+            result = await session.execute(query)
+            return result.scalar()
+
     @classmethod
     async def find_token(cls, long_url: str):
         async with async_session_maker() as session:

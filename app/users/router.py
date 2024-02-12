@@ -1,5 +1,5 @@
 from datetime import datetime
-from fastapi import APIRouter, Response, Depends, status
+from fastapi import APIRouter, Query, Response, Depends, status
 from app.users.schemas import SUser
 from app.users.auth import get_password_hash
 from app.users.dao import UserDAO
@@ -44,15 +44,42 @@ async def logout(response: Response):
     response.delete_cookie("web-app-session-id")
 
 @router.get("/my_all")
-async def get_my_all_urls(user: UsersModel = Depends(get_current_user)):
-    result = await ReductionDAO.find_all_user_url(user_id=user.id)
+async def get_my_all_urls(
+    user: UsersModel = Depends(get_current_user),
+    page: int = Query(1, alias="page", description="Номер страницы"),
+    size: int = Query(10, alias="size", description="Размер страницы"),
+):
+    result = await ReductionDAO.find_all_user_url_pagination(
+        user_id=user.id, size=size, page=page
+    )
+    total_urls = await ReductionDAO.count_user_urls(user_id=user.id)
     users_url = []
     for i in result:
         users_url.append(
             {
                 "short_url": f'{domain}/{i.token}',
                 "long_url": i.long_url,
-                "id": i.id
+                "id": i.id,
             }
         )
-    return users_url
+    return {
+        "user_urls": users_url,
+        "total": total_urls,
+        "page": page,
+        "size": size,
+    }
+
+
+# @router.get("/my_all")
+# async def get_my_all_urls(user: UsersModel = Depends(get_current_user)):
+#     result = await ReductionDAO.find_all_user_url(user_id=user.id)
+#     users_url = []
+#     for i in result:
+#         users_url.append(
+#             {
+#                 "short_url": f'{domain}/{i.token}',
+#                 "long_url": i.long_url,
+#                 "id": i.id
+#             }
+#         )
+#     return users_url
