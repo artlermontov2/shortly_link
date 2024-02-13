@@ -59,15 +59,42 @@
     </ul>
 </div>
 <nav aria-label="Страницы">
-    <ul class="pagination justify-content-center">
-        {% for i in range(1, (user_links.total // user_links.size) + 2) %}
-            {% if (i != (user_links.total // user_links.size) + 1) or (user_links.total % user_links.size != 0) %}
-                <li class="page-item {% if i == user_links.page %}active{% endif %}">
-                <a class="page-link" href="?page={{ i }}&size={{ user_links.size }}">{{ i }}</a>
-                </li>
-            {% endif %}
-        {% endfor %}
-    </ul>
+  <ul class="pagination justify-content-center">
+    {% if user_links.page > 1 %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ user_links.page - 1 }}&size={{ user_links.size }}">Предыдущая</a>
+      </li>
+    {% endif %}
+
+    {% set start_page = (user_links.page - 2) if (user_links.page - 2) > 0 else 1 %}
+    {% set end_page = (user_links.page + 3) if (user_links.page + 3) < (user_links.total // user_links.size) + 1 else (user_links.total // user_links.size) + 1 %}
+
+    {% if start_page > 1 %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1&size={{ user_links.size }}">1</a>
+      </li>
+      <li class="page-item disabled"><span class="page-link">...</span></li>
+    {% endif %}
+    
+    {% for i in range(start_page, end_page) %}
+      <li class="page-item {% if i == user_links.page %}active{% endif %}">
+        <a class="page-link" href="?page={{ i }}&size={{ user_links.size }}">{{ i }}</a>
+      </li>
+    {% endfor %}
+    
+    {% if end_page < (user_links.total // user_links.size) %}
+      <li class="page-item disabled"><span class="page-link">...</span></li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ (user_links.total // user_links.size) + 1 }}&size={{ user_links.size }}">{{ (user_links.total // user_links.size) + 1 }}</a>
+      </li>
+    {% endif %}
+
+    {% if user_links.page < (user_links.total // user_links.size) %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ user_links.page + 1 }}&size={{ user_links.size }}">Следующая</a>
+      </li>
+    {% endif %}
+  </ul>
 </nav>
 
 {% endblock  %}
