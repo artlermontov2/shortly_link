@@ -23,22 +23,6 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col items-center">
-    <div class="link-item text-center">
-        <div><strong>Мои ссылки</strong></div>
-    </div>
-    <ul class="list-none text-left">
-        {% for link in user_links %}
-        <li class="text-2xl font-bold mb-5">
-            <div class="link-item">
-                <div class="short-url">Короткая: {{ link.short_url }}</div>
-                <div class="long-url">Полная: {{ link.long_url }}</div>
-                <a class="delete-url" href="#" onclick="deleteLink({{ link.id }})">Удалить</a>
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
 <style>
     .link-item {
         background-color: #f4f4f4;
@@ -57,4 +41,62 @@
         margin-top: 5px;
     }
 </style>
+<div class="flex flex-col items-center">
+    <div class="link-item text-center">
+        <div><strong>Мои ссылки</strong></div>
+    </div>
+    <ul class="list-none text-left">
+        {% for link in user_links['user_urls'] %}
+        <li class="text-2xl font-bold mb-6">
+            <div class="link-item">
+                <div class="short-url">Короткая: {{ link.short_url }}</div>
+                <div class="long-url">Полная: {{ link.long_url }}</div>
+                <a class="delete-url" href="#" onclick="deleteLink({{ link.id }})">Удалить</a>
+            </div>
+        </li>
+        
+        {% endfor %}
+    </ul>
+</div>
+<nav aria-label="Страницы">
+  <ul class="pagination justify-content-center">
+    {% if user_links.page > 1 %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ user_links.page - 1 }}&size={{ user_links.size }}">Предыдущая</a>
+      </li>
+    {% endif %}
+
+    {% set start_page = (user_links.page - 2) if (user_links.page - 2) > 0 else 1 %}
+    {% set end_page = (user_links.page + 3) if (user_links.page + 3) < (user_links.total // user_links.size) + 1 else (user_links.total // user_links.size) + 1 %}
+
+    {% if start_page > 1 %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1&size={{ user_links.size }}">1</a>
+      </li>
+      <li class="page-item disabled"><span class="page-link">...</span></li>
+    {% endif %}
+    
+    {% for i in range(start_page, end_page + 1) %}
+      {% if (i != (user_links.total // user_links.size) + 1) or (user_links.total % user_links.size != 0) %}
+      <li class="page-item {% if i == user_links.page %}active{% endif %}">
+        <a class="page-link" href="?page={{ i }}&size={{ user_links.size }}">{{ i }}</a>
+      </li>
+      {% endif %}
+    {% endfor %}
+    
+    {% if end_page < (user_links.total // user_links.size) %}
+      <li class="page-item disabled"><span class="page-link">...</span></li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ (user_links.total // user_links.size) + 1 }}&size={{ user_links.size }}">{{ (user_links.total // user_links.size) + 1 }}</a>
+      </li>
+    {% endif %}
+
+    {% if user_links.page < (user_links.total // user_links.size) %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ user_links.page + 1 }}&size={{ user_links.size }}">Следующая</a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+
 {% endblock  %}
