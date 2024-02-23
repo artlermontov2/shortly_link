@@ -1,7 +1,10 @@
+import asyncio
 from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends
 from fastapi.responses import RedirectResponse
+from fastapi_cache.decorator import cache
 from hashids import Hashids
+
 from app.reduction.schemas import UrlItem
 from app.reduction.dao import ReductionDAO
 from app.users.dependencies import get_current_user
@@ -45,9 +48,9 @@ async def shorten(
     return {"msg": "Короткая ссылка была создана", "short_url": short_url}
 
 @router.get("/{short_url}")
+@cache(expire=20)
 async def redirect_to_original_url(short_url: str):
     long_url = await ReductionDAO.find_original_url(token=short_url, user_id=1)
-
     if long_url is None:
         raise OriginalUrlNotFound
     return RedirectResponse(url=long_url)
