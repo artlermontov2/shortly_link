@@ -4,6 +4,7 @@ from passlib.context import CryptContext
 from pydantic import EmailStr
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
+
 from app.users.dao import UserDAO
 
 load_dotenv()

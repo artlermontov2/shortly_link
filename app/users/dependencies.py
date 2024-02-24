@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from fastapi import Depends, Request
 from dotenv import load_dotenv
 from jose import jwt, JWTError
+
 from app.users.dao import UserDAO
 from app.exeptions import (
     TokenAbsentExeption, IncorrectTokenFormatExeption,

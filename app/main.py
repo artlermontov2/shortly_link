@@ -9,7 +9,6 @@ from app.users.router import router as users_router
 from app.pages.router import router as pages_router
 
 
-
 app = FastAPI()
 
 app.include_router(reduction_router)
