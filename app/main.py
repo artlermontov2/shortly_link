@@ -1,9 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
-
 from redis import asyncio as aioredis
 
 from app.reduction.router import router as reduction_router
@@ -20,7 +18,7 @@ app.include_router(pages_router)
 
 # Подключение CORS, чтобы запросы к API могли приходить из браузера 
 origins = [
-    "http://localhost:3000", "http://127.0.0.1:8000"
+    "http://localhost:3000", "http://127.0.0.1:8000", "http://localhost:6379"
 ]
 
 app.add_middleware(
@@ -37,3 +35,4 @@ app.add_middleware(
 async def startup():
     redis = aioredis.from_url("redis://localhost")
     FastAPICache.init(RedisBackend(redis), prefix="cache")
+
