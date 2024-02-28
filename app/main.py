@@ -5,6 +5,10 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
 from dotenv import load_dotenv
+from sqladmin import Admin, ModelView
+
+from app.database import engine
+from app.admin.view import UserAdmin, ShortenAdmin
 
 from app.reduction.router import router as reduction_router
 from app.users.router import router as users_router
@@ -37,8 +41,14 @@ app.add_middleware(
                    "Authorization"],
 )
 
+# Redis
 @app.on_event("startup")
 async def startup():
     redis = aioredis.from_url(f"redis://{REDIS_HOST}:{REDIS_PORT}")
     FastAPICache.init(RedisBackend(redis), prefix="cache")
+
+# SQLAlchemy Admin
+admin = Admin(app, engine, base_url="/pages/admin")
+admin.add_view(UserAdmin)
+admin.add_view(ShortenAdmin)
 

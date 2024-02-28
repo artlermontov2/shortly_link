@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy.orm import relationship
 
 from app.database import Base
 
@@ -12,3 +13,8 @@ class ShortenModel(Base):
     long_url = Column(String, nullable=False)
     created_at = Column(Date, nullable=False)
     expiry_at = Column(Date, nullable=False)
+
+    user = relationship("UsersModel", back_populates="urls")
+
+    def __str__(self) -> str:
+        return f"#{self.id}"
