@@ -33,7 +33,6 @@ async def shorten(
             "msg": "Такая ссылка уже существует", "short_url": short_url
         }
     
-    await ReductionDAO.delete_after_expire()
     token = generate_token(url.long_url)
     short_url = f'{domain}/{token}'
     await ReductionDAO.add(
