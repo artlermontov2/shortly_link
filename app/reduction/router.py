@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends
 from fastapi.responses import RedirectResponse
 from hashids import Hashids
+
 from app.reduction.schemas import UrlItem
 from app.reduction.dao import ReductionDAO
 from app.users.dependencies import get_current_user
@@ -32,7 +33,6 @@ async def shorten(
             "msg": "Такая ссылка уже существует", "short_url": short_url
         }
     
-    await ReductionDAO.delete_after_expire()
     token = generate_token(url.long_url)
     short_url = f'{domain}/{token}'
     await ReductionDAO.add(
@@ -46,11 +46,10 @@ async def shorten(
 
 @router.get("/{short_url}")
 async def redirect_to_original_url(short_url: str):
-    long_url = await ReductionDAO.find_original_url(token=short_url, user_id=1)
-
+    long_url = await ReductionDAO.find_original_url(token=short_url)
     if long_url is None:
         raise OriginalUrlNotFound
-    return RedirectResponse(url=long_url)
+    return RedirectResponse(url=long_url, status_code=307)
 
 @router.delete("/delete/{id}")
 async def delete_record(id: int, user: UsersModel = Depends(get_current_user)):

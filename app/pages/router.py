@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, Depends
 from fastapi.templating import Jinja2Templates
+
 from app.users.models import UsersModel
 from app.users.dependencies import get_current_user
 from app.users.router import get_my_all_urls
@@ -20,7 +21,10 @@ async def login(request: Request):
     )
 
 @router.get("/shorten_url")
-async def shorten(request: Request, user: UsersModel = Depends(get_current_user)):
+async def shorten(
+    request: Request, 
+    user: UsersModel = Depends(get_current_user),
+):
     return templates.TemplateResponse(
         name="shorten.html",
         context={"request": request, "user": user}
@@ -35,7 +39,9 @@ async def register(request: Request):
 
 @router.get("/user_link")
 async def register(
-    request: Request, user_links=Depends(get_my_all_urls), user: UsersModel = Depends(get_current_user)
+    request: Request,
+    user_links=Depends(get_my_all_urls), 
+    user: UsersModel = Depends(get_current_user),
 ):
     return templates.TemplateResponse(
         name="user.html",

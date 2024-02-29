@@ -1,6 +1,8 @@
 from datetime import date, datetime
 from sqlalchemy import desc, insert, select, and_, delete, func
 from sqlalchemy.orm import load_only
+from fastapi_cache.decorator import cache
+
 from app.database import async_session_maker
 from app.reduction.models import ShortenModel
 
@@ -9,13 +11,11 @@ class ReductionDAO:
     model = ShortenModel
 
     @classmethod
-    async def find_original_url(cls, token: str, user_id: int):
+    @cache(expire=86400*30) # Кэш на 30 дней
+    async def find_original_url(cls, token: str):
         async with async_session_maker() as session:
             query = select(cls.model.long_url).where(
-                and_(
-                    cls.model.token == token,
-                    cls.model.user_id == user_id
-                )
+                cls.model.token == token
             )
             result = await session.execute(query)
             return result.scalar()
