@@ -9,6 +9,7 @@ from sqladmin import Admin, ModelView
 
 from app.database import engine
 from app.admin.view import UserAdmin, ShortenAdmin
+from app.admin.auth import authentication_backend
 
 from app.reduction.router import router as reduction_router
 from app.users.router import router as users_router
@@ -48,7 +49,9 @@ async def startup():
     FastAPICache.init(RedisBackend(redis), prefix="cache")
 
 # SQLAlchemy Admin
-admin = Admin(app, engine, base_url="/pages/admin")
+admin = Admin(
+    app, engine, authentication_backend=authentication_backend, base_url="/pages/admin"
+)
 admin.add_view(UserAdmin)
 admin.add_view(ShortenAdmin)
 
