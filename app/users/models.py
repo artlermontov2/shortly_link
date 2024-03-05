@@ -12,8 +12,7 @@ class UsersModel(Base):
     email = Column(String, nullable=False)
     created_at = Column(Date, nullable=False)
 
-    # urls = relationship("ShortenModel")
-    # urls = relationship("ShortenModel", back_populates="user")
+    urls = relationship("ShortenModel", back_populates="user")
 
     def __str__(self) -> str:
         return self.email

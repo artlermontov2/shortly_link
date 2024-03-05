@@ -1,3 +1,3 @@
 import os
 
-os.environ["MODE"] = "DEV"
+os.environ["MODE"] = "TEST"

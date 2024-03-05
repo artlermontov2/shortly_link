@@ -11,8 +11,7 @@ def periodic_task():
 celery.conf.beat_schedule = {
     'add-every-24-hours': {
         'task': 'app.tasks.tasks.periodic_task',
-        'schedule': 20,
+        'schedule': timedelta(days=1),
 
     },
 }
-# timedelta(days=1)
