@@ -5,7 +5,7 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
 from dotenv import load_dotenv
-from sqladmin import Admin, ModelView
+from sqladmin import Admin
 
 from app.database import engine
 from app.admin.view import UserAdmin, ShortenAdmin
