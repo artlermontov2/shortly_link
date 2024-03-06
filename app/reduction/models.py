@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import relationship
 
-from app.users.models import UsersModel
+from app.users.models import UsersModel # Не удалять
 from app.database import Base
 
 

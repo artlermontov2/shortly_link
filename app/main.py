@@ -50,7 +50,7 @@ async def startup():
 
 # SQLAlchemy Admin
 admin = Admin(
-    app, engine, authentication_backend=authentication_backend, base_url="/pages/admin"
+    app, engine, authentication_backend=authentication_backend, base_url="/pages/admin", debug=True
 )
 admin.add_view(UserAdmin)
 admin.add_view(ShortenAdmin)
