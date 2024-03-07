@@ -1,5 +1,5 @@
 import asyncio
-import datetime
+from datetime import datetime
 import json
 import os
 from dotenv import load_dotenv
@@ -18,7 +18,7 @@ load_dotenv()
 async def prepare_database():
     assert os.getenv("MODE") == "TEST"
 
-    async with engine.begin as conn:
+    async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
@@ -26,8 +26,8 @@ async def prepare_database():
         with open(f"app/tests/mock_{model}.json", "r") as file:
             return json.load(file)
         
-    users = open_model_mock(users)
-    urls = open_model_mock(urls)
+    users = open_model_mock("users")
+    urls = open_model_mock("urls")
 
     for user in users:
     # SQLAlchemy не принимает дату в текстовом формате, поэтому форматируем к datetime
@@ -37,7 +37,7 @@ async def prepare_database():
         url["created_at"] = datetime.strptime(url["created_at"], "%Y-%m-%d")
         url["expiry_at"] = datetime.strptime(url["expiry_at"], "%Y-%m-%d")
 
-    async with async_session_maker as session:
+    async with async_session_maker() as session:
         add_users = insert(UsersModel).values(users)
         add_urls = insert(ShortenModel).values(urls)
 
@@ -49,16 +49,16 @@ async def prepare_database():
 
 # Взято из документации к pytest-asyncio
 # Создаем новый event loop для прогона тестов
-# @pytest.fixture(scope="session")
-# def event_loop(request):
-#     """Create an instance of the default event loop for each test case."""
-#     loop = asyncio.get_event_loop_policy().new_event_loop()
-#     yield loop
-#     loop.close()
+@pytest.fixture(scope="session")
+def event_loop(request):
+    """Create an instance of the default event loop for each test case."""
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
 
-def pytest_collection_modifyitems(items):
-    pytest_asyncio_tests = (item for item in items if is_async_test(item))
-    session_scope_marker = pytest.mark.asyncio(scope="session")
-    for async_test in pytest_asyncio_tests:
-        async_test.add_marker(session_scope_marker)
+# def pytest_collection_modifyitems(items):
+#     pytest_asyncio_tests = (item for item in items if is_async_test(item))
+#     session_scope_marker = pytest.mark.asyncio(scope="session")
+#     for async_test in pytest_asyncio_tests:
+#         async_test.add_marker(session_scope_marker)
         
