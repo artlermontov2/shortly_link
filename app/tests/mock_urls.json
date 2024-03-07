@@ -1,0 +1,16 @@
+[
+    {
+        "user_id": 1,
+        "token": "zc4pAiE",
+        "long_url": "https://rutube.ru/video/1ae8724b3d7d8e86a39885928064a7b5/?playlist=316738&playlistPage=1",
+        "created_at": "2024-02-12",
+        "expiry_at": "2024-03-13"
+    },
+    {
+        "user_id": 1,
+        "token": "ocEkjik",
+        "long_url": "https://gist.github.com/artemonsh/34345edb40d9097f94bd54aa4b8313f6",
+        "created_at": "2024-02-12",
+        "expiry_at": "2024-03-13"
+    }
+]
