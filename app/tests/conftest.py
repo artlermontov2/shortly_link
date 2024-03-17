@@ -10,6 +10,10 @@ from sqlalchemy import insert
 from app.database import Base, async_session_maker, engine
 from app.users.models import UsersModel
 from app.reduction.models import ShortenModel
+from app.main import app as fastapi_app
+
+from fastapi.testclient import TestClient
+from httpx import AsyncClient
 
 load_dotenv()
 
@@ -61,4 +65,14 @@ def pytest_collection_modifyitems(items):
     session_scope_marker = pytest.mark.asyncio(scope="session")
     for async_test in pytest_asyncio_tests:
         async_test.add_marker(session_scope_marker)
-        
+
+@pytest.fixture(scope="function")   
+async def ac():
+    async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
+        yield ac
+
+
+@pytest.fixture(scope="function")
+async def session():
+    async with async_session_maker as session:
+        yield session
