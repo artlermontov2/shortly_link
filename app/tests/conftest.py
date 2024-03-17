@@ -66,6 +66,7 @@ def pytest_collection_modifyitems(items):
     for async_test in pytest_asyncio_tests:
         async_test.add_marker(session_scope_marker)
 
+
 @pytest.fixture(scope="function")   
 async def ac():
     async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
