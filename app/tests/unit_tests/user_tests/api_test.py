@@ -1,2 +1,44 @@
-def test_some():
-    assert 1 == 1
+from httpx import AsyncClient
+import pytest
+
+
+@pytest.mark.parametrize("email,password,created_at,status_code", [
+    ("markus@test.ru", "test", "2024-02-12", 201),
+    ("markus@test.ru", "tost", "2024-02-12", 409),
+    ("markus", "tost", "2024-02-12", 422),
+])                       
+async def test_register_user(
+    ac: AsyncClient,
+    email, password, created_at, status_code
+):
+    responce = await ac.post(
+        "/auth/register",
+        json={
+            "email": email,
+            "password": password,
+            "created_at": created_at
+        }
+    )
+
+    assert responce.status_code == status_code
+
+
+@pytest.mark.parametrize("email,password,created_at,status_code", [
+    ("artem@test.com", "test", "2024-02-12", 200),
+    ("wrong@person.com", "test", "2024-02-12", 401),
+    ("artem", "test", "2024-02-12", 422),
+])
+async def test_login(
+    ac: AsyncClient,
+    email, password, created_at, status_code
+):
+    responce = await ac.post(
+        "/auth/login",
+        json={
+            "email": email,
+            "password": password,
+            "created_at": created_at
+        }
+    )
+
+    assert responce.status_code == status_code
