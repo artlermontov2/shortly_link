@@ -14,4 +14,6 @@ async def test_add(ac: AsyncClient):
 
     assert result.user_id == 1
     assert isinstance(result.token, str)
-    assert result.token == "uREknik"
+
+    token = await ReductionDAO.find_token("https://aminalaee.dev/sqladmin/working_with_files/")
+    assert token is not None

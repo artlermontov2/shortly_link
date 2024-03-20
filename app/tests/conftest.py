@@ -4,6 +4,7 @@ import json
 import os
 from dotenv import load_dotenv
 from pytest_asyncio import is_async_test
+from pytest import Cache
 import pytest
 from sqlalchemy import insert
 
@@ -15,8 +16,8 @@ from app.main import app as fastapi_app
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 
-load_dotenv()
 
+load_dotenv()
 
 @pytest.fixture(scope="session", autouse=True)
 async def prepare_database():
