@@ -12,7 +12,7 @@ class ReductionDAO:
 
     # Нужно заккоментировать кэш на время тестирования
     @classmethod
-    @cache(expire=86400*30) # Кэш на 30 дней
+    # @cache(expire=86400*30) # Кэш на 30 дней
     async def find_original_url(cls, token: str):
         async with async_session_maker() as session:
             query = select(cls.model.long_url).where(

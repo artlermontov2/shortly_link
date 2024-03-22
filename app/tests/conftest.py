@@ -4,7 +4,6 @@ import json
 import os
 from dotenv import load_dotenv
 from pytest_asyncio import is_async_test
-from pytest import Cache
 import pytest
 from sqlalchemy import insert
 
@@ -62,6 +61,18 @@ def pytest_collection_modifyitems(items):
 @pytest.fixture(scope="function")   
 async def ac():
     async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
+        yield ac
+
+
+@pytest.fixture(scope="session")   
+async def auth_ac():
+    async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
+        await ac.post("/auth/login", json={
+            "email": "artem@test.com",
+            "password": "test",
+            "created_at": "2024-02-12"
+        })
+        assert ac.cookies["web-app-session-id"]
         yield ac
 
 

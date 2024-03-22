@@ -17,3 +17,6 @@ async def test_add(ac: AsyncClient):
 
     token = await ReductionDAO.find_token("https://aminalaee.dev/sqladmin/working_with_files/")
     assert token is not None
+
+    url = await ReductionDAO.find_original_url("uREknik")
+    assert url is not None
