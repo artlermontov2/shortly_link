@@ -1,15 +1,17 @@
 import os
 from datetime import datetime, timezone
-from fastapi import Depends, Request
+
 from dotenv import load_dotenv
-from jose import jwt, JWTError
+from fastapi import Depends, Request
+from jose import JWTError, jwt
 
-from app.users.dao import UserDAO
 from app.exeptions import (
-    TokenAbsentExeption, IncorrectTokenFormatExeption,
-    TokenExpiredExeption, UserIsNotPresentExeption,
+    IncorrectTokenFormatExeption,
+    TokenAbsentExeption,
+    TokenExpiredExeption,
+    UserIsNotPresentExeption,
 )
-
+from app.users.dao import UserDAO
 
 load_dotenv()
 

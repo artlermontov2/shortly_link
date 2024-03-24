@@ -1,7 +1,8 @@
 from datetime import date, datetime
-from sqlalchemy import desc, insert, select, and_, delete, func
-from sqlalchemy.orm import load_only
+
 from fastapi_cache.decorator import cache
+from sqlalchemy import and_, delete, desc, func, insert, select
+from sqlalchemy.orm import load_only
 
 from app.database import async_session_maker
 from app.reduction.models import ShortenModel
@@ -12,7 +13,7 @@ class ReductionDAO:
 
     # Нужно заккоментировать кэш на время тестирования
     @classmethod
-    # @cache(expire=86400*30) # Кэш на 30 дней
+    @cache(expire=86400*30) # Кэш на 30 дней
     async def find_original_url(cls, token: str):
         async with async_session_maker() as session:
             query = select(cls.model.long_url).where(

@@ -1,9 +1,10 @@
-from jose import jwt
 import os
+from datetime import datetime, timedelta, timezone
+
+from dotenv import load_dotenv
+from jose import jwt
 from passlib.context import CryptContext
 from pydantic import EmailStr
-from datetime import datetime, timedelta, timezone
-from dotenv import load_dotenv
 
 from app.users.dao import UserDAO
 

@@ -1,17 +1,15 @@
 from datetime import datetime
-from fastapi import APIRouter, Query, Response, Depends, status
 
-from app.users.schemas import SUser
-from app.users.auth import get_password_hash
-from app.users.dao import UserDAO
-from app.users.schemas import SUser
-from app.users.models import UsersModel
-from app.users.auth import authenticate_user, create_access_token
-from app.users.dependencies import get_current_user
-from app.exeptions import UserAlredyExistsException, IncorrectEmailOrPasswordException
+from fastapi import APIRouter, Depends, Query, Response, status
+
+from app.exeptions import IncorrectEmailOrPasswordException, UserAlredyExistsException
 from app.reduction.dao import ReductionDAO
 from app.reduction.router import domain
-
+from app.users.auth import authenticate_user, create_access_token, get_password_hash
+from app.users.dao import UserDAO
+from app.users.dependencies import get_current_user
+from app.users.models import UsersModel
+from app.users.schemas import SUser
 
 router = APIRouter(
     prefix="/auth",
