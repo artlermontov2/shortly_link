@@ -1,7 +1,7 @@
 from sqladmin import ModelView
 
-from app.users.models import UsersModel
 from app.reduction.models import ShortenModel
+from app.users.models import UsersModel
 
 
 class UserAdmin(ModelView, model=UsersModel):

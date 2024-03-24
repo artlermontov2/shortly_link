@@ -1,7 +1,9 @@
-from datetime import timedelta
 import asyncio
-from app.tasks.celery import celery
+from datetime import timedelta
+
 from app.reduction.dao import ReductionDAO
+from app.tasks.celery import celery
+
 
 @celery.task
 def periodic_task():

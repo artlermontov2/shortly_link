@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy import Column, Date, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from app.users.models import UsersModel # Не удалять
 from app.database import Base
+from app.users.models import UsersModel  # Не удалять
 
 
 class ShortenModel(Base):

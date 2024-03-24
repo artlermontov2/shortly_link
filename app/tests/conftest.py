@@ -1,20 +1,19 @@
 import asyncio
-from datetime import datetime
 import json
 import os
-from dotenv import load_dotenv
-from pytest_asyncio import is_async_test
+from datetime import datetime
+
 import pytest
+from dotenv import load_dotenv
+from fastapi.testclient import TestClient
+from httpx import AsyncClient
+from pytest_asyncio import is_async_test
 from sqlalchemy import insert
 
 from app.database import Base, async_session_maker, engine
-from app.users.models import UsersModel
-from app.reduction.models import ShortenModel
 from app.main import app as fastapi_app
-
-from fastapi.testclient import TestClient
-from httpx import AsyncClient
-
+from app.reduction.models import ShortenModel
+from app.users.models import UsersModel
 
 load_dotenv()
 

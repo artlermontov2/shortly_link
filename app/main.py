@@ -1,20 +1,19 @@
 import os
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
-from dotenv import load_dotenv
 from sqladmin import Admin
 
-from app.database import engine
-from app.admin.view import UserAdmin, ShortenAdmin
 from app.admin.auth import authentication_backend
-
-from app.users.router import router as users_router
-from app.reduction.router import router as reduction_router
+from app.admin.view import ShortenAdmin, UserAdmin
+from app.database import engine
 from app.pages.router import router as pages_router
-
+from app.reduction.router import router as reduction_router
+from app.users.router import router as users_router
 
 load_dotenv()
 

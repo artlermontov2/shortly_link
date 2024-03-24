@@ -1,5 +1,7 @@
 from datetime import date
-from sqlalchemy import insert, delete, select
+
+from sqlalchemy import delete, insert, select
+
 from app.database import async_session_maker
 from app.users.models import UsersModel
 

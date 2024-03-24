@@ -1,7 +1,8 @@
 from datetime import date, datetime
-from sqlalchemy import desc, insert, select, and_, delete, func
-from sqlalchemy.orm import load_only
+
 from fastapi_cache.decorator import cache
+from sqlalchemy import and_, delete, desc, func, insert, select
+from sqlalchemy.orm import load_only
 
 from app.database import async_session_maker
 from app.reduction.models import ShortenModel

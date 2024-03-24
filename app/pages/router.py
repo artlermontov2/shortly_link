@@ -1,10 +1,9 @@
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, Depends, Request
 from fastapi.templating import Jinja2Templates
 
-from app.users.models import UsersModel
 from app.users.dependencies import get_current_user
+from app.users.models import UsersModel
 from app.users.router import get_my_all_urls
-
 
 router = APIRouter(
     prefix="/pages",
