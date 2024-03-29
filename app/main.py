@@ -5,14 +5,14 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
 from dotenv import load_dotenv
-from sqladmin import Admin, ModelView
+from sqladmin import Admin
 
 from app.database import engine
 from app.admin.view import UserAdmin, ShortenAdmin
 from app.admin.auth import authentication_backend
 
-from app.reduction.router import router as reduction_router
 from app.users.router import router as users_router
+from app.reduction.router import router as reduction_router
 from app.pages.router import router as pages_router
 
 
@@ -23,8 +23,8 @@ REDIS_PORT = os.getenv('REDIS_PORT')
 
 app = FastAPI()
 
-app.include_router(reduction_router)
 app.include_router(users_router)
+app.include_router(reduction_router)
 app.include_router(pages_router)
 
 # Подключение CORS, чтобы запросы к API могли приходить из браузера 
@@ -50,7 +50,7 @@ async def startup():
 
 # SQLAlchemy Admin
 admin = Admin(
-    app, engine, authentication_backend=authentication_backend, base_url="/pages/admin"
+    app, engine, authentication_backend=authentication_backend, base_url="/pages/admin", debug=True
 )
 admin.add_view(UserAdmin)
 admin.add_view(ShortenAdmin)

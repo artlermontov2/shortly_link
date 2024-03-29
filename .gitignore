@@ -163,3 +163,4 @@ cython_debug/
 .alenbic.ini
 .dump.rdb
 .celerybeat-schedule
+*.pyc

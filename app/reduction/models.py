@@ -1,7 +1,11 @@
 from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import relationship
 
+<<<<<<< HEAD
 from app.users.models import UsersModel
+=======
+from app.users.models import UsersModel # Не удалять
+>>>>>>> tests
 from app.database import Base
 
 
@@ -19,3 +23,5 @@ class ShortenModel(Base):
 
     def __str__(self) -> str:
         return f"#{self.id}"
+    
+    
