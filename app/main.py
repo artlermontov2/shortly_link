@@ -1,7 +1,8 @@
+import time
 import os
 
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
@@ -14,6 +15,7 @@ from app.database import engine
 from app.pages.router import router as pages_router
 from app.reduction.router import router as reduction_router
 from app.users.router import router as users_router
+from app.logger import logger
 
 load_dotenv()
 
@@ -53,4 +55,16 @@ admin = Admin(
 )
 admin.add_view(UserAdmin)
 admin.add_view(ShortenAdmin)
+
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    logger.info("Request handling time", extra={
+        "process_time": round(process_time, 4)
+    })
+    response.headers["X-Process-Time"] = str(process_time)
+    return response
 
