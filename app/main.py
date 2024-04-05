@@ -8,6 +8,7 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
 from sqladmin import Admin
+import sentry_sdk
 
 from app.admin.auth import authentication_backend
 from app.admin.view import ShortenAdmin, UserAdmin
@@ -18,6 +19,12 @@ from app.users.router import router as users_router
 from app.logger import logger
 
 load_dotenv()
+
+sentry_sdk.init(
+    dsn=os.getenv('DSN'),
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
+)
 
 REDIS_HOST = os.getenv('REDIS_HOST')
 REDIS_PORT = os.getenv('REDIS_PORT')
