@@ -3,9 +3,11 @@ from datetime import date, datetime
 from fastapi_cache.decorator import cache
 from sqlalchemy import and_, delete, desc, func, insert, select
 from sqlalchemy.orm import load_only
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.database import async_session_maker
 from app.reduction.models import ShortenModel
+from app.logger import logger
 
 
 class ReductionDAO:
@@ -30,18 +32,33 @@ class ReductionDAO:
             created_at: date,
             expiry_at: date
     ):
-        async with async_session_maker() as session:
-            query = insert(cls.model).values(
-                long_url = long_url,
-                user_id = user_id,
-                token = token,
-                created_at = created_at,
-                expiry_at = expiry_at
-            ).returning(ShortenModel)
+        try:
+            async with async_session_maker() as session:
+                query = insert(cls.model).values(
+                    long_url = long_url,
+                    user_id = user_id,
+                    token = token,
+                    created_at = created_at,
+                    expiry_at = expiry_at
+                ).returning(ShortenModel)
 
-            result = await session.execute(query)
-            await session.commit()
-            return result.scalar()
+                result = await session.execute(query)
+                await session.commit()
+                return result.scalar()
+        except (SQLAlchemyError, Exception) as e:
+            if isinstance(e, SQLAlchemyError):
+                msg = "DataBase Exc"
+            elif isinstance(e, Exception):
+                msg = "Unknown Exc"
+            msg += ": Cannot add url"
+            extra = {
+                "long_url": long_url,
+                "user_id": user_id,
+                "token": token,
+                "created_at": created_at,
+                "expiry_at": expiry_at,
+            }
+            logger.error(msg, extra=extra, exc_info=True)
         
     @classmethod
     async def find_users_token(cls, long_url: str, user_id: int):
