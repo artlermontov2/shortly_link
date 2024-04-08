@@ -8,7 +8,7 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
 from sqladmin import Admin
-import sentry_sdk
+# import sentry_sdk
 from fastapi_versioning import VersionedFastAPI
 
 from app.admin.auth import authentication_backend
@@ -21,11 +21,11 @@ from app.logger import logger
 
 load_dotenv()
 
-sentry_sdk.init(
-    dsn=os.getenv('DSN'),
-    traces_sample_rate=1.0,
-    profiles_sample_rate=1.0,
-)
+# sentry_sdk.init(
+#     dsn=os.getenv('DSN'),
+#     traces_sample_rate=1.0,
+#     profiles_sample_rate=1.0,
+# )
 
 REDIS_HOST = os.getenv('REDIS_HOST')
 REDIS_PORT = os.getenv('REDIS_PORT')
@@ -38,11 +38,11 @@ app = FastAPI(
 
 app.include_router(users_router)
 app.include_router(reduction_router)
-app.include_router(pages_router)
+
 
 # Подключение CORS, чтобы запросы к API могли приходить из браузера 
 origins = [
-    "http://localhost:3000", "http://127.0.0.1:8000", "http://localhost:6379"
+    "http://localhost:3000", "http://localhost:6379"
 ]
 
 app.add_middleware(
@@ -61,6 +61,8 @@ app = VersionedFastAPI(app,
     version_format='{major}',
     prefix_format='/api/v{major}',
 )
+
+app.include_router(pages_router)
 
 if os.getenv('MODE') == "TEST":
     # При тестировании через pytest, необходимо подключать Redis, чтобы кэширование работало.

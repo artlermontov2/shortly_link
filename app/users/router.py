@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, Query, Response, status
+# from fastapi_versioning import version
 
 from app.exeptions import IncorrectEmailOrPasswordException, UserAlredyExistsException
 from app.reduction.dao import ReductionDAO
@@ -16,7 +17,6 @@ router = APIRouter(
     tags=["Auth & Пользователи"]
 )
 
-
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register_user(user: SUser):
     existing_user = await UserDAO.find_user(email=user.email)
@@ -29,6 +29,7 @@ async def register_user(user: SUser):
         email=user.email,
         created_at=datetime.now()
     )
+
 
 @router.post("/login")
 async def login(response: Response, user_data: SUser):

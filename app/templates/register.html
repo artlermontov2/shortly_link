@@ -3,7 +3,7 @@
 {% block head %}
     <script>
         async function registerUser() {
-            const url = "http://127.0.0.1:8000/auth/register";
+            const url = "http://127.0.0.1:8000/api/v1/auth/register";
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
             const userData = {
@@ -47,7 +47,7 @@
               <button onclick="registerUser()" class="btn btn-primary d-flex justify-content-start">Зарегистрироваться</button>
               <span>
                 Уже зарегистрированы?
-                <a href="/pages/index"
+                <a href="pages/index"
                    class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600">
                     Войти
                 </a>
