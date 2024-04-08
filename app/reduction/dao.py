@@ -13,7 +13,6 @@ from app.logger import logger
 class ReductionDAO:
     model = ShortenModel
 
-    # Нужно заккоментировать кэш на время тестирования
     @classmethod
     @cache(expire=86400*30) # Кэш на 30 дней
     async def find_original_url(cls, token: str):
