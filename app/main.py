@@ -9,6 +9,7 @@ from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
 from sqladmin import Admin
 import sentry_sdk
+from fastapi_versioning import VersionedFastAPI
 
 from app.admin.auth import authentication_backend
 from app.admin.view import ShortenAdmin, UserAdmin
@@ -29,7 +30,11 @@ sentry_sdk.init(
 REDIS_HOST = os.getenv('REDIS_HOST')
 REDIS_PORT = os.getenv('REDIS_PORT')
 
-app = FastAPI()
+app = FastAPI(
+    title="Сокращение ссылок",
+    version="0.1.0",
+    root_path="/api",
+)
 
 app.include_router(users_router)
 app.include_router(reduction_router)
@@ -49,6 +54,20 @@ app.add_middleware(
                    "Access-Control-Allow-Origin",
                    "Authorization"],
 )
+
+# Подключение версионирования
+# Добавление версии к endpoint при помщи декоратора @version(int)
+app = VersionedFastAPI(app,
+    version_format='{major}',
+    prefix_format='/api/v{major}',
+)
+
+if os.getenv('MODE') == "TEST":
+    # При тестировании через pytest, необходимо подключать Redis, чтобы кэширование работало.
+    # Иначе декоратор @cache из библиотеки fastapi-cache ломает выполнение кэшируемых эндпоинтов.
+    # Из этого следует вывод, что сторонние решения порой ломают наш код, и это бывает проблематично поправить.
+    redis = aioredis.from_url(f"redis://{REDIS_HOST}:{REDIS_PORT}", encoding="utf8", decode_responses=True)
+    FastAPICache.init(RedisBackend(redis), prefix="cache")
 
 # Redis
 @app.on_event("startup")
@@ -74,4 +93,6 @@ async def add_process_time_header(request: Request, call_next):
     })
     response.headers["X-Process-Time"] = str(process_time)
     return response
+
+
 

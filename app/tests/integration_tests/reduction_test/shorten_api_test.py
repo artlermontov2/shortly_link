@@ -8,7 +8,7 @@ from httpx import AsyncClient
     (123, 422),
 ])
 async def test_add_url(auth_ac: AsyncClient, url, status_code):
-    responce = await auth_ac.post("/shorten", json={
+    responce = await auth_ac.post("api/v1/shorten", json={
         "long_url": url
     })
 
@@ -21,5 +21,5 @@ async def test_add_url(auth_ac: AsyncClient, url, status_code):
     ("qwe", 404),
 ])
 async def test_redirect_to_origin_url(auth_ac: AsyncClient, token, status_code):
-    responce = await auth_ac.get(f"{token}")
+    responce = await auth_ac.get(f"api/v1/{token}")
     assert responce.status_code == status_code
