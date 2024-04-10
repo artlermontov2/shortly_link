@@ -33,11 +33,11 @@ REDIS_PORT = os.getenv('REDIS_PORT')
 app = FastAPI(
     title="Сокращение ссылок",
     version="0.1.0",
-    root_path="/api",
 )
 
 app.include_router(users_router)
 app.include_router(reduction_router)
+app.include_router(pages_router)
 
 
 # Подключение CORS, чтобы запросы к API могли приходить из браузера 
@@ -57,12 +57,11 @@ app.add_middleware(
 
 # Подключение версионирования
 # Добавление версии к endpoint при помщи декоратора @version(int)
-app = VersionedFastAPI(app,
-    version_format='{major}',
-    prefix_format='/api/v{major}',
-)
+# app = VersionedFastAPI(app,
+#     version_format='{major}',
+#     prefix_format='/api/v{major}',
+# )
 
-app.include_router(pages_router)
 
 if os.getenv('MODE') == "TEST":
     # При тестировании через pytest, необходимо подключать Redis, чтобы кэширование работало.

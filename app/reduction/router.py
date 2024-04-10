@@ -14,7 +14,7 @@ router = APIRouter(
     tags=["Shortly Link"]
 )
 
-domain = 'http://127.0.0.1:8000'
+domain = f'http://127.0.0.1:8000'
 expire_days = 30
 
 def generate_token(url: str):
