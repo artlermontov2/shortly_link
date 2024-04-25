@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:16
+    container_name: shrotly_db
+    restart: always
+    env_file:
+      - .env_prod
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image:  redis:7
+    container_name: shrotly_redis
+
+  shortly:
+    build:
+      context: .
+    container_name: shrotly_app
+    restart: always
+    env_file:
+      - .env_prod
+    depends_on:
+      - db
+      - redis
+    command: ["/shortly_links/docker/app.sh"]
+    ports:
+      - '9000:8000'
+
+  celery:
+    build:
+      context: .
+    container_name: shortly_celery
+    env_file:
+      - .env_prod
+    depends_on:
+      - redis
+    command: ["/shortly_links/docker/celery.sh"]
+
+volumes:
+  postgres_data:
+    
