@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
+from prometheus_fastapi_instrumentator import Instrumentator
 from sqladmin import Admin
 # import sentry_sdk
 from fastapi_versioning import VersionedFastAPI
@@ -76,6 +77,12 @@ async def startup():
     redis = aioredis.from_url(f"redis://{REDIS_HOST}:{REDIS_PORT}")
     FastAPICache.init(RedisBackend(redis), prefix="cache")
 
+instrumentator = Instrumentator(
+    should_group_status_codes=False,
+    excluded_handlers=[".*admin.*", "/metrics"],
+)
+instrumentator = Instrumentator(app).expose(app)
+
 # SQLAlchemy Admin
 admin = Admin(
     app, engine, authentication_backend=authentication_backend, base_url="/pages/admin", debug=True
@@ -94,6 +101,3 @@ async def add_process_time_header(request: Request, call_next):
     })
     response.headers["X-Process-Time"] = str(process_time)
     return response
-
-
-
