@@ -23,3 +23,17 @@ Celery
 Docker
 Docker Compose
 Grafana, Prometeus
+
+## Запуск
+
+Добавьте нужные значения в файл <code>.env_example</code>
+
+первый запуск
+<code>docker compose up --buld</code>
+
+остановить
+<code>docker compose down</code>
+
+админ панель доступна по адресу:
+http://localhost:8000/pages/admin/login
+
